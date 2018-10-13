@@ -4,12 +4,15 @@
   "description": "Transforms Capital One credit card transaction format into HomeBank format",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
   },
-  "author": "wzt",
-  "license": "ISC",
+  "author": "weizhongtan",
+  "license": "MIT",
   "dependencies": {
-    "csvjson": "^5.1.0"
+    "chalk": "^2.4.1",
+    "csvjson": "^5.1.0",
+    "minimist": "^1.2.0"
   },
   "bin": {
     "csv-transform": "./index.js"
