@@ -10,47 +10,63 @@ const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
 const { log } = console;
+const {
+    red: error,
+    green: info,
+    cyan: special,
+} = chalk;
 
-const printUsage = () => {
-    log(chalk.red('usage: csv-transform --in ./path/to/input.csv [--out ./path/to/output.csv]'));
-};
+const exitCode = (async () => {
+    const inPath = argv.in;
+    const outPath = argv.out;
+    const configPath = argv.config;
 
-(async () => {
-    if (!argv.in) {
-        printUsage();
-        return;
+    if (!inPath || !outPath || !configPath) {
+        log(error('usage: csv-transform --config ./cap1-homebank.conf.js --in ./path/to/input.csv [--out ./path/to/output.csv]'));
+        return 4;
     }
 
-    const inPath = argv.in;
-    const outPath = argv.out || inPath.replace(/.csv$/, '-homebank.csv');
+    let config;
+    try {
+        config = require(configPath); // eslint-disable-line
+    } catch (err) {
+        log(error(`Cannot read config file: ${configPath}`));
+        return 1;
+    }
 
-    const csvData = await readFile(inPath, { encoding: 'utf8' });
-    const jsonData = csvjson.toObject(csvData, {
-        delimiter: ',', // optional
-        quote: '"', // optional
-    });
+    if (typeof config.transformer !== 'function') {
+        log(error(`Cannot read config file: ${configPath}`));
+        return 2;
+    }
 
-    const isIncome = str => /PAYMENT RECEIVED/.test(str);
-    const transformed = jsonData
-        .filter(d => !isIncome(d.description))
-        .map(d => ({
-            date: d.date.replace(/T.*/, ''),
-            payment: 1, // credit card
-            info: '',
-            payee: '',
-            memo: d.description,
-            amount: -d.originalCurrencyAmount, // expense
-            category: '',
-            tags: 'csv-transfer',
-        }));
-    const transformedCsv = csvjson.toCSV(transformed, {
-        delimiter: ';',
-        wrap: false,
-    }).replace(/\[\]\./g, '');
+    if (!('options' in config && 'in' in config.options && 'out' in config.options)) {
+        log(error(`Malformed config export: ${configPath}`));
+        return 3;
+    }
+
+    let csvData;
+    try {
+        csvData = await readFile(inPath, { encoding: 'utf8' });
+    } catch (err) {
+        log(error(`Cannot read in file: ${inPath}`));
+        return 5;
+    }
+    const jsonData = csvjson.toObject(csvData, config.options.in);
+
+    const transformed = config.transformer(jsonData);
+
+    // strip out "[]." notation from headings
+    const transformedCsv = csvjson.toCSV(transformed, config.options.out).replace(/\[\]\./g, '');
 
     await writeFile(outPath, transformedCsv);
 
-    log(chalk.green('Transformed output file:'), chalk.magenta(outPath));
-    log(chalk.cyan('################## OUTPUT ##################'));
-    log(chalk.yellow(transformedCsv));
+    log(info('Transformed output file:'), special(outPath));
+    log(special('################## OUTPUT ##################'));
+    log(info(transformedCsv));
+
+    return 0;
 })();
+
+exitCode.then((code) => {
+    process.exit(code);
+});
