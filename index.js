@@ -3,18 +3,12 @@
 const csvjson = require('csvjson');
 const fs = require('fs');
 const { promisify } = require('util');
-const chalk = require('chalk');
 const argv = require('minimist')(process.argv.slice(2));
+
+const { log, types: { error, info, special } } = require('./log');
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
-
-const { log } = console;
-const {
-    red: error,
-    green: info,
-    cyan: special,
-} = chalk;
 
 const exitCode = (async () => {
     const inPath = argv.in;
@@ -67,6 +61,7 @@ const exitCode = (async () => {
     return 0;
 })();
 
-exitCode.then((code) => {
+(async () => {
+    const code = await exitCode;
     process.exit(code);
-});
+})();
