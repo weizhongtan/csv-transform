@@ -2,7 +2,7 @@
   "name": "csv-transform",
   "version": "0.0.1",
   "description": "Transforms Capital One credit card transaction format into HomeBank format",
-  "main": "index.js",
+  "main": "cli.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint ."
@@ -15,7 +15,7 @@
     "minimist": "^1.2.0"
   },
   "bin": {
-    "csv-transform": "./index.js"
+    "csv-transform": "./cli.js"
   },
   "devDependencies": {
     "eslint": "^5.7.0",
