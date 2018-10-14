@@ -5,7 +5,7 @@ Transforms Capital One credit card transaction format into HomeBank format
 ## Usage
 
 ```sh
-csv-transform --in ./transactions.csv [--out transactions-homebank.csv]
+csv-transform --config ./cap1-homebank.conf.js --in ./path/to/input.csv [--out ./path/to/output.csv]
 ```
 
 ## Todo
