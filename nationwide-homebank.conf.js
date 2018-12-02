@@ -15,7 +15,7 @@ const transformer = (json) => {
 
         if (!entry.in && !entry.out) {
             // collapse entries following contactless payments into previous entries
-            if (/Contactless/.test(prev.memo)) {
+            if (prev && /Contactless/.test(prev.memo)) {
                 arr[arr.length - 1].memo = entry.memo;
             }
 
