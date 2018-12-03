@@ -16,7 +16,7 @@ const exitCode = (async () => {
     const configPath = argv.config;
 
     if (!inPath || !outPath || !configPath) {
-        log(error('usage: csv-transform --config ./cap1-homebank.conf.js --in ./path/to/input.csv [--out ./path/to/output.csv]'));
+        log(error('usage: csv-transform --config ./cap1-homebank.conf.js --in ./path/to/input.csv --out ./path/to/output.csv'));
         return 4;
     }
 
