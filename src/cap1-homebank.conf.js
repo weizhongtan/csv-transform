@@ -1,4 +1,4 @@
-const isIncome = str => /PAYMENT RECEIVED/.test(str);
+const isIncome = str => /DIRECT DEBIT PAYMENT/.test(str);
 
 const transformer = json => json
     .filter(d => !isIncome(d.description))
