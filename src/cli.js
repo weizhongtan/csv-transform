@@ -2,6 +2,7 @@
 
 const csvjson = require('csvjson');
 const fs = require('fs');
+const path = require('path');
 const { promisify } = require('util');
 const argv = require('minimist')(process.argv.slice(2));
 
@@ -22,9 +23,10 @@ const exitCode = (async () => {
 
     let config;
     try {
-        config = require(configPath); // eslint-disable-line
+        config = require(path.resolve(process.cwd(), configPath)); // eslint-disable-line
     } catch (err) {
         log(error(`Cannot read config file: ${configPath}`));
+        log(error(err));
         return 1;
     }
 
