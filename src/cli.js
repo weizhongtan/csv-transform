@@ -49,7 +49,7 @@ const exitCode = (async () => {
     }
     const jsonData = csvjson.toObject(csvData, config.options.in);
 
-    const transformed = config.transformer(jsonData);
+    const transformed = await config.transformer(jsonData);
 
     // strip out "[]." notation from headings
     const transformedCsv = csvjson.toCSV(transformed, config.options.out).replace(/\[\]\./g, '');
