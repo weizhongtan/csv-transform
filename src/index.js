@@ -14,7 +14,7 @@ const {
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
-const exitCode = (async () => {
+const doThing = async () => {
   const inPath = argv.in;
   const outPath = argv.out;
   const configPath = argv.config;
@@ -22,7 +22,7 @@ const exitCode = (async () => {
   if (!inPath || !outPath || !configPath) {
     log(
       error(
-        'usage: csv-transform --config ./cap1-homebank.conf.js --in ./path/to/input.csv --out ./path/to/output.csv'
+        'usage: csv-transform --config ./cap1-homebank.conf.js --in ./path/to/input.csv --out ./path/to/output.csv asdf'
       )
     );
     return 4;
@@ -72,9 +72,6 @@ const exitCode = (async () => {
   log(info(transformedCsv));
 
   return 0;
-})();
+};
 
-(async () => {
-  const code = await exitCode;
-  process.exit(code);
-})();
+const code = doThing().then(code => process.exit(code));
