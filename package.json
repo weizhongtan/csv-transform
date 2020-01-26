@@ -29,9 +29,9 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "csv-transform-2",
+  "name": "csv-transform",
   "author": "weizhongtan",
-  "module": "dist/csv-transform-2.esm.js",
+  "module": "dist/csv-transform.esm.js",
   "devDependencies": {
     "@types/jest": "^24.9.1",
     "ava": "^3.1.0",
